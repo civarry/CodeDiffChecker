@@ -3,66 +3,22 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>File Comparison Tool</title>
+    <title>Code Comparison Tool</title>
     <link
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
       rel="stylesheet"
     />
-    <style>
-      body {
-        background-color: #f0f0f0;
-      }
-      .center-form {
-        display: flex;
-        justify-content: center;
-      }
-      .custom-card {
-        background-color: #ffffff;
-        border: 1px solid #ced4da;
-        border-radius: 5px;
-        padding: 20px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      }
-      .btn-modern {
-        background-color: #007bff;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-      }
-      .btn-modern:hover {
-        background-color: #0056b3;
-      }
-      .custom-file-input {
-        opacity: 0;
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        cursor: pointer;
-      }
-      .custom-file-label {
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        cursor: pointer;
-      }
-      .custom-file-label::after {
-        content: "Browse";
-      }
-      .custom-file-input:focus + .custom-file-label {
-        border-color: #007bff;
-        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-      }
-    </style>
+    <link
+      href="{{ url_for('static', filename='styles.css') }}"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <div class="container mt-5">
-      <h1 class="mb-4 text-center">File Comparison Tool</h1>
+      <h1 class="mb-4 text-center bold-text">Code Comparison Tool</h1>
 
       <div class="center-form">
-        <div class="card custom-card col-md-6">
+        <div class="card custom-card">
           <div class="card-body">
             <form id="uploadForm" enctype="multipart/form-data">
               <div class="form-group">
@@ -73,7 +29,7 @@
                     class="custom-file-input"
                     id="file1"
                     name="file1"
-                    accept=".html,.css,.js,.ts,.py,.c,.cpp,.java,.php,.rb,.pl"
+                    accept=".txt,.html,.css,.js,.ts,.py,.c,.cpp,.java,.php,.rb,.pl"
                   />
                   <label class="custom-file-label" for="file1"
                     >Choose file...</label
@@ -88,7 +44,7 @@
                     class="custom-file-input"
                     id="file2"
                     name="file2"
-                    accept=".html,.css,.js,.ts,.py,.c,.cpp,.java,.php,.rb,.pl"
+                    accept=".txt,.html,.css,.js,.ts,.py,.c,.cpp,.java,.php,.rb,.pl"
                   />
                   <label class="custom-file-label" for="file2"
                     >Choose file...</label
@@ -109,33 +65,7 @@
 
       <div id="comparisonResult" class="mt-5"></div>
     </div>
-
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script>
-      function compareFiles() {
-        var form = document.getElementById("uploadForm");
-        var formData = new FormData(form);
-
-        $.ajax({
-          type: "POST",
-          url: "/compare",
-          data: formData,
-          contentType: false,
-          processData: false,
-          success: function (response) {
-            $("#comparisonResult").html(response);
-          },
-          error: function (error) {
-            console.error("Error:", error);
-          },
-        });
-      }
-
-      // Update file input label text to show selected file name
-      $(".custom-file-input").on("change", function () {
-        var fileName = $(this).val().split("\\").pop();
-        $(this).next(".custom-file-label").addClass("selected").html(fileName);
-      });
-    </script>
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
   </body>
 </html>
