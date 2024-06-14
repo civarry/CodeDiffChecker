@@ -46,6 +46,7 @@ table {
 
 .btn-modern:hover {
   background-color: #0056b3;
+  color: #ccc;
 }
 
 .custom-file-input {
