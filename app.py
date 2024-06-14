@@ -41,18 +41,20 @@ def compare():
         </ul>
     </div>
     
+    <div id="comparisonResult">
+        <input type="text" id="searchInput" class="form-control mt-3 mb-3" placeholder="Search...">
     <table class="table table-bordered">
-        <thead class="thead-dark">
-            <tr>
-                <th scope="col">Unchanged</th>
-                <th scope="col">File 1</th>
-                <th scope="col">File 2</th>
-            </tr>
-        </thead>
-        <tbody>
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col" id="unchangedHeader">Unchanged</th>
+                    <th scope="col" id="file1Header">File 1</th>
+                    <th scope="col" id="file2Header">File 2</th>
+                </tr>
+            </thead>
+            <tbody>
     """
     
-    for line in result:
+    for index, line in enumerate(result):
         unchanged = ""
         file1_line = ""
         file2_line = ""
@@ -68,7 +70,7 @@ def compare():
         file2_line = html.escape(file2_line)
         
         html_content += f"""
-        <tr>
+        <tr id="row_{index}">
             <td>{unchanged}</td>
             <td class="text-danger">{file1_line}</td>
             <td class="text-success">{file2_line}</td>
@@ -76,8 +78,32 @@ def compare():
         """
     
     html_content += """
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#searchInput').keyup(function () {
+                var searchText = $(this).val().toLowerCase();
+        
+                $('tbody tr').each(function () {
+                    var unchangedText = $(this).find('td:nth-child(1)').text().toLowerCase();
+                    var file1Text = $(this).find('td:nth-child(2)').text().toLowerCase();
+                    var file2Text = $(this).find('td:nth-child(3)').text().toLowerCase();
+        
+                    if (unchangedText.indexOf(searchText) === -1 &&
+                        file1Text.indexOf(searchText) === -1 &&
+                        file2Text.indexOf(searchText) === -1) {
+                        $(this).hide();
+                    } else {
+                        $(this).show();
+                    }
+                });
+            });
+        });
+    </script>
     """
     
     return html_content
