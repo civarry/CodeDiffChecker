@@ -16,15 +16,19 @@ def compare():
     file1_content = file1.read().decode('utf-8')
     file2_content = file2.read().decode('utf-8')
     
+    # Split and filter out empty or whitespace-only lines
+    file1_lines = [line for line in file1_content.splitlines(keepends=True) if line.strip()]
+    file2_lines = [line for line in file2_content.splitlines(keepends=True) if line.strip()]
+    
     differ = Differ()
-    result = list(differ.compare(file1_content.splitlines(keepends=True), file2_content.splitlines(keepends=True)))
+    result = list(differ.compare(file1_lines, file2_lines))
     
     num_unchanged = 0
     num_file1_unique = 0
     num_file2_unique = 0
     
     for line in result:
-        if line.startswith('  ') and not line.isspace():  # Check for unchanged lines excluding blanks
+        if line.startswith('  '):  # Check for unchanged lines
             num_unchanged += 1
         elif line.startswith('- '):
             num_file1_unique += 1
@@ -42,7 +46,7 @@ def compare():
     </div>
     
     <div id="comparisonResult">
-        <input type="text" id="searchInput" class="form-control mt-3 mb-3" placeholder="Search...">
+        <input type="text" id="searchInput" class="form-control mt-3 mb-3" placeholder="Search diff to see affected lines...">
     <table class="table table-bordered">
             <thead class="thead-dark">
                 <tr>
@@ -58,12 +62,12 @@ def compare():
         unchanged = ""
         file1_line = ""
         file2_line = ""
-        if line.startswith('  ') and not line.isspace():  # Check unchanged lines excluding blanks
+        if line.startswith('  '):  # Check unchanged lines
             unchanged = line.strip()
         elif line.startswith('- '):
-            file1_line = line.strip()
+            file1_line = "diff1: " + line.strip()
         elif line.startswith('+ '):
-            file2_line = line.strip()
+            file2_line = "diff2: " + line.strip()
         
         unchanged = html.escape(unchanged)
         file1_line = html.escape(file1_line)
